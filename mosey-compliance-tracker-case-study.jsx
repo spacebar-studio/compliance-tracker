@@ -160,7 +160,7 @@ export default function ComplianceTrackerCaseStudy() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 48px 60px", fontFamily: FT }}>
 
         <div className="fu" style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 28 }}>
-          {[["Portfolio", "https://www.designsbytulcy.weebly.com"], ["Resume", "https://drive.google.com/file/d/1dvnaJaTdTq2Esx_BNRYnpLAZjJgwRk79/view?usp=sharing"], ["LinkedIn", "https://www.linkedin.com/in/tulcypatel"]].map(function(l) { return <a key={l[0]} href={l[1]} target="_blank" rel="noopener noreferrer" style={{ padding: "5px 14px", borderRadius: 6, background: C.ro, color: "#fff", fontSize: 11, fontWeight: 600, textDecoration: "none", fontFamily: FT }}>{l[0]}</a>; })}
+          {[["Portfolio", "https://designsbytulcy.weebly.com"], ["Resume", "https://drive.google.com/file/d/1dvnaJaTdTq2Esx_BNRYnpLAZjJgwRk79/view?usp=sharing"], ["LinkedIn", "https://www.linkedin.com/in/tulcypatel"]].map(function(l) { return <a key={l[0]} href={l[1]} target="_blank" rel="noopener noreferrer" style={{ padding: "5px 14px", borderRadius: 6, background: C.ro, color: "#fff", fontSize: 11, fontWeight: 600, textDecoration: "none", fontFamily: FT }}>{l[0]}</a>; })}
         </div>
 
         <div className="fu" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 20 }}>
