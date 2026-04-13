@@ -279,7 +279,7 @@ export default function ComplianceTrackerCaseStudy() {
 
         </div>{/* end content key wrapper */}
 
-        <div style={{ marginTop: 32, paddingTop: 20, borderTop: "1px solid " + C.s2, textAlign: "center" }}><p style={{ fontSize: 11, color: C.t3 }}>Compliance Tracker · Mosey · Designed by Tulcy · 2025</p></div>
+        <div style={{ marginTop: 32, paddingTop: 20, borderTop: "1px solid " + C.s2, textAlign: "center" }}><p style={{ fontSize: 11, color: C.t3 }}>Compliance Tracker · Mosey · Designed by Tulcy · 2026</p></div>
 
       </div>
     </GradBg>
