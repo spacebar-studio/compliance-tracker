@@ -98,6 +98,1638 @@ var OUTCOMES = [{ metric: "30%", label: "Reduction in time-to-payroll-ready", de
 
 var OUTCOMES_QUAL = ["Significant improvement in cross-functional alignment across finance, HR, and legal — shared visibility reduced internal escalations and misaligned expectations", "Increased customer trust and retention — compliance transparency became a key differentiator, with teams citing the tracker as a primary reason they felt confident with Mosey", "Helped position Mosey's automation as a trust-building capability — not just a time-saver, but a confidence-builder for distributed businesses", "Enabled more strategic compliance planning by transforming registration status into a shared, real-time, AI-informed operational signal"];
 
+// ─── Design System Page (Compliance Tracker Interface) ───────────────
+
+var DS_COLORS = {
+  navy: "#1B2559", navyLight: "#2D3A6E", navySoft: "rgba(27,37,89,.06)",
+  teal: "#0EA5E9", tealBg: "rgba(14,165,233,.08)", tealBd: "rgba(14,165,233,.2)",
+  green: "#22C55E", greenBg: "rgba(34,197,94,.08)", greenBd: "rgba(34,197,94,.2)",
+  amber: "#EAB308", amberBg: "rgba(234,179,8,.08)", amberBd: "rgba(234,179,8,.2)",
+  red: "#EF4444", redBg: "rgba(239,68,68,.08)", redBd: "rgba(239,68,68,.2)",
+  rose: "#D4697A", roseBg: "rgba(212,105,122,.06)", roseBd: "rgba(212,105,122,.18)",
+  pageBg: "#F8FAFC", cardBg: "#FFFFFF", sidebarBg: "#FFFFFF",
+  border: "#E2E8F0", borderLight: "#F1F5F9",
+  text1: "#1E293B", text2: "#64748B", text3: "#94A3B8",
+  iconSidebar: "#94A3B8", iconActive: "#D4697A",
+};
+
+var DS_FONT = "'Inter','Outfit',system-ui,sans-serif";
+
+function DesignSystemPage() {
+  var _ds1 = useState("overview");
+  var dsSec = _ds1[0]; var setDsSec = _ds1[1];
+  var _ds2 = useState(null);
+  var dsHov = _ds2[0]; var setDsHov = _ds2[1];
+  var _ds3 = useState({});
+  var dsPlays = _ds3[0]; var setDsPlays = _ds3[1];
+  var _ds4 = useState("New");
+  var dsTabActive = _ds4[0]; var setDsTabActive = _ds4[1];
+  var _ds5 = useState("All");
+  var dsFilterActive = _ds5[0]; var setDsFilterActive = _ds5[1];
+  var _ds6 = useState(false);
+  var dsLoading = _ds6[0]; var setDsLoading = _ds6[1];
+  var _ds7 = useState(null);
+  var dsHovColor = _ds7[0]; var setDsHovColor = _ds7[1];
+
+  function dsToggle(k){setDsPlays(function(p){var n={};for(var x in p)n[x]=p[x];n[k]=!n[k];return n;});}
+
+  var DS_CATS = [
+    {cat:"Overview",items:[{id:"overview",la:"Introduction"}]},
+    {cat:"Foundations",items:[
+      {id:"principles",la:"Design Principles"},
+      {id:"colors",la:"Color Palette"},
+      {id:"typography",la:"Typography"},
+      {id:"spacing",la:"Spacing Scale"},
+      {id:"elevation",la:"Elevation & Shadows"}
+    ]},
+    {cat:"Components",items:[
+      {id:"comp-badge",la:"Status Badge"},
+      {id:"comp-button",la:"Button"},
+      {id:"comp-kpi",la:"KPI Tile"},
+      {id:"comp-card",la:"Registration Card"},
+      {id:"comp-progress",la:"Progress Tracker"},
+      {id:"comp-filter",la:"Filter Chip"},
+      {id:"comp-tabs",la:"Status Tabs"},
+      {id:"comp-activity",la:"Activity Feed Item"},
+      {id:"comp-alert",la:"Alert Banner"},
+      {id:"comp-nav",la:"Navigation Sidebar"},
+      {id:"comp-help",la:"Help Card"},
+      {id:"comp-empty",la:"Empty State"},
+      {id:"comp-skeleton",la:"Skeleton Loader"}
+    ]},
+    {cat:"Motion",items:[
+      {id:"motion",la:"Motion & Animation"}
+    ]},
+    {cat:"Patterns",items:[
+      {id:"patterns",la:"Layout Patterns"},
+      {id:"icons",la:"Icons & Indicators"},
+      {id:"hierarchy",la:"Data Hierarchy"},
+      {id:"feedback",la:"Feedback & States"}
+    ]},
+    {cat:"Guidelines",items:[
+      {id:"usage",la:"Usage Rules"},
+      {id:"accessibility",la:"Accessibility"}
+    ]}
+  ];
+
+  var DSH = {fontSize:12,color:DS_COLORS.rose,fontWeight:600,marginBottom:10,textTransform:"uppercase",letterSpacing:"0.06em",fontFamily:FT};
+
+  function DSCard({children,style,accent}){
+    return <div className="fu" style={{padding:"16px 18px",border:"1px solid "+(accent||DS_COLORS.border),borderRadius:10,background:DS_COLORS.cardBg,marginBottom:14,transition:"all .25s",...style}}>{children}</div>;
+  }
+
+  function DSSwatch({name,hex,desc,sub}){
+    var isH=dsHovColor===name;
+    return <div onMouseEnter={function(){setDsHovColor(name);}} onMouseLeave={function(){setDsHovColor(null);}}
+      style={{background:DS_COLORS.cardBg,border:"1px solid "+(isH?DS_COLORS.roseBd:DS_COLORS.border),borderRadius:10,overflow:"hidden",cursor:"pointer",transition:"all 0.2s",transform:isH?"translateY(-2px)":"translateY(0)"}}>
+      <div style={{height:52,background:hex,position:"relative"}}>
+        {isH && <div className="fi" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.35)",fontSize:11,color:"#fff",fontFamily:MN,fontWeight:500}}>{hex}</div>}
+      </div>
+      <div style={{padding:"8px 10px"}}>
+        <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text1,fontFamily:FT}}>{name}</div>
+        <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT,marginTop:2}}>{desc}</div>
+        {sub && <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,marginTop:2}}>{sub}</div>}
+      </div>
+    </div>;
+  }
+
+  function DSBadge({type,children}){
+    var colors = {
+      new:{bg:DS_COLORS.tealBg,color:DS_COLORS.teal,bd:DS_COLORS.tealBd,icon:"📋"},
+      "in-progress":{bg:DS_COLORS.tealBg,color:DS_COLORS.teal,bd:DS_COLORS.tealBd,icon:"⏳"},
+      "action-required":{bg:DS_COLORS.amberBg,color:DS_COLORS.amber,bd:DS_COLORS.amberBd,icon:"⚠"},
+      blocked:{bg:DS_COLORS.redBg,color:DS_COLORS.red,bd:DS_COLORS.redBd,icon:"🚫"},
+      completed:{bg:DS_COLORS.greenBg,color:DS_COLORS.green,bd:DS_COLORS.greenBd,icon:"✓"},
+      category:{bg:DS_COLORS.navySoft,color:DS_COLORS.navy,bd:"rgba(27,37,89,.12)",icon:"⊞"},
+      automation:{bg:DS_COLORS.roseBg,color:DS_COLORS.rose,bd:DS_COLORS.roseBd,icon:"⚡"}
+    };
+    var c = colors[type]||colors["new"];
+    return <span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"3px 10px",borderRadius:6,background:c.bg,color:c.color,border:"1px solid "+c.bd,fontSize:11,fontWeight:500,fontFamily:DS_FONT,whiteSpace:"nowrap"}}>{children}</span>;
+  }
+
+  function DSBtn({primary,outline,sm,children,onClick,disabled,style:extraStyle}){
+    var _bh = useState(false);
+    var bHov = _bh[0]; var setBHov = _bh[1];
+    var base = {
+      padding:sm?"5px 12px":"7px 16px",borderRadius:8,fontSize:sm?11:12,fontWeight:500,
+      fontFamily:DS_FONT,cursor:disabled?"not-allowed":"pointer",transition:"all 0.2s",
+      border:primary?"none":"1px solid "+DS_COLORS.border,
+      background:primary?(bHov&&!disabled?DS_COLORS.navyLight:DS_COLORS.navy):(bHov&&!disabled?DS_COLORS.borderLight:"transparent"),
+      color:primary?"#fff":DS_COLORS.text1,
+      opacity:disabled?0.5:1,
+      transform:bHov&&!disabled?"translateY(-1px)":"translateY(0)"
+    };
+    if(outline){base.border="1px solid "+DS_COLORS.border;base.background=bHov?"rgba(0,0,0,.02)":"transparent";base.color=DS_COLORS.text1;}
+    return <button onMouseEnter={function(){setBHov(true);}} onMouseLeave={function(){setBHov(false);}} onClick={disabled?undefined:onClick} style={{...base,...extraStyle}}>{children}</button>;
+  }
+
+  // ─── DS Section Renderers ───
+
+  function renderOverview(){
+    var sections = [
+      {id:"principles",la:"Design Principles",de:"5 core principles guiding the Compliance Tracker: status over silence, blockers before surprises, one source of truth, role-aware clarity, trust through transparency.",cat:"Foundations"},
+      {id:"colors",la:"Color Palette",de:"Semantic status colors (Teal, Green, Amber, Red), brand Rose, Navy for structure, and neutral surfaces — each with foreground, background, and border variants.",cat:"Foundations"},
+      {id:"typography",la:"Typography",de:"Inter typeface for UI clarity, with a type scale from 10px to 24px, 4 font weights, and tabular numerals for data alignment.",cat:"Foundations"},
+      {id:"spacing",la:"Spacing Scale",de:"4px base unit spacing system with gap, padding, and margin scales. 7 border-radius tokens from 4px to full-round.",cat:"Foundations"},
+      {id:"elevation",la:"Elevation & Shadows",de:"Subtle card shadows, colored left-border accents for activity items, and ambient glow for attention states.",cat:"Foundations"},
+      {id:"components",la:"Component Library",de:"13 interactive components — StatusBadge, Button, KPITile, RegistrationCard, ProgressTracker, FilterChip, StatusTabs, ActivityFeedItem, AlertBanner, NavSidebar, HelpCard, EmptyState, SkeletonLoader.",cat:"Components"},
+      {id:"motion",la:"Motion & Animation",de:"Fade-up entrance, skeleton shimmer, progress bar transitions, status badge pulse, and staggered list entry — all playable.",cat:"Motion"},
+      {id:"patterns",la:"Patterns & Usage",de:"Dashboard anatomy, registration detail layout, activity feed structure, category-first navigation, and filter interaction patterns.",cat:"Patterns"},
+      {id:"usage",la:"Usage Rules",de:"Consolidated do's and don'ts for color, typography, components, motion, and layout across the Compliance Tracker.",cat:"Guidelines"}
+    ];
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+          <MoseyLogo size={28}/>
+          <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,fontFamily:FT}}>Compliance Tracker — Design System</h1>
+        </div>
+        <p style={{fontSize:13,color:DS_COLORS.text2,lineHeight:1.7,marginBottom:10,fontFamily:FT,maxWidth:700}}>The complete design language extracted from the Mosey Compliance Tracker interface. Every color, component, and interaction pattern documented with live interactive examples.</p>
+        <div style={{display:"flex",gap:6,marginBottom:24}}>
+          <DSBadge type="category">22 Sections</DSBadge>
+          <DSBadge type="new">13 Components</DSBadge>
+          <DSBadge type="automation">Interactive</DSBadge>
+        </div>
+
+        <DSCard accent={DS_COLORS.roseBd} style={{padding:20,marginBottom:20}}>
+          <div style={DSH}>How to Use This System</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+            {[
+              ["Explore","Navigate sections in the left panel. Each section is self-contained with live examples, specs, and usage rules."],
+              ["Interact","Components are interactive — hover buttons, click tabs, toggle filters, play animations. See every state in context."],
+              ["Reference","Every token, value, and pattern is documented with exact specs. Use this as the source of truth for the Compliance Tracker."]
+            ].map(function(item,i){
+              return <div key={i} style={{padding:14,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.rose,marginBottom:6,fontFamily:FT}}>{item[0]}</div>
+                <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{item[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <div style={DSH}>What's Inside</div>
+        {["Foundations","Components","Motion","Patterns","Guidelines"].map(function(cat){
+          var items = sections.filter(function(s){return s.cat===cat;});
+          return <div key={cat} style={{marginBottom:16}}>
+            <div style={{fontSize:10,fontWeight:600,color:DS_COLORS.text3,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:6,fontFamily:FT}}>{cat}</div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat("+Math.min(items.length,3)+",1fr)",gap:10}}>
+              {items.map(function(s){
+                return <DSCard key={s.id} style={{padding:14,cursor:"pointer",marginBottom:0}} accent={DS_COLORS.border}>
+                  <div onClick={function(){setDsSec(s.id==="components"?"comp-badge":s.id);}} style={{cursor:"pointer"}}>
+                    <div style={{fontSize:13,fontWeight:600,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>{s.la}</div>
+                    <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{s.de}</p>
+                  </div>
+                </DSCard>;
+              })}
+            </div>
+          </div>;
+        })}
+
+        <DSCard style={{marginTop:8,marginBottom:0}}>
+          <div style={DSH}>At a Glance</div>
+          <div style={{display:"flex",gap:8}}>
+            {[["Colors","18","tokens"],["Type Steps","8","10px–24px"],["Components","13","interactive"],["Animations","8","entrance + loops"],["Sections","22","across 6 categories"]].map(function(k,i){
+              return <div key={i} style={{flex:1,padding:"10px 12px",background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,minWidth:0}}>
+                <div style={{fontSize:10,fontWeight:600,color:DS_COLORS.text3,textTransform:"uppercase",letterSpacing:"0.06em",fontFamily:FT,marginBottom:4}}>{k[0]}</div>
+                <div style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,fontFamily:FT,lineHeight:1}}>{k[1]}</div>
+                <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT,marginTop:2}}>{k[2]}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderPrinciples(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Design Principles</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The foundational principles guiding every design decision in the Compliance Tracker interface.</p>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24}}>
+          {[
+            ["Status Over Silence","Every registration has a visible, named state at all times. Users never wonder 'where does this stand?' — the tracker shows it.",DS_COLORS.teal],
+            ["Blockers Before Surprises","Surface what needs action before it becomes a missed deadline. Proactive alerts over reactive firefighting.",DS_COLORS.amber],
+            ["One Source of Truth","Finance, HR, and legal see the same compliance picture from their own lens. No version conflicts, no misaligned status.",DS_COLORS.green],
+            ["Role-Aware Clarity","Show each user exactly what they need to know and act on, nothing more. Category filters and role-based views reduce noise.",DS_COLORS.rose],
+            ["Trust Through Transparency","Show the work: every step, every agency interaction, every milestone. The progress tracker makes the invisible visible.",DS_COLORS.navy]
+          ].map(function(p,i){
+            return <DSCard key={i} style={{borderLeft:"3px solid "+p[2],padding:16,marginBottom:0}}>
+              <div style={{fontSize:14,fontWeight:600,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>{p[0]}</div>
+              <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,margin:0,fontFamily:FT}}>{p[1]}</p>
+            </DSCard>;
+          })}
+        </div>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Visual Design Philosophy</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+            {[
+              ["Light & Clean","White card surfaces on light gray backgrounds create a professional, trustworthy environment for compliance data."],
+              ["Semantic Color","Status is communicated through consistent color mapping — Teal for new, Amber for attention, Green for done, Red for blocked."],
+              ["Progressive Disclosure","Dashboard summary → category filter → registration detail → step-by-step progress. Each layer adds depth without overwhelm."]
+            ].map(function(item,i){
+              return <div key={i} style={{padding:14,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.rose,marginBottom:6,fontFamily:FT}}>{item[0]}</div>
+                <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{item[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderColors(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Color Palette</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Hover over any swatch to reveal its hex value. Colors are organized by function.</p>
+
+        <div style={DSH}>Page & Surface Colors</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:24}}>
+          <DSSwatch name="Page Background" hex="#F8FAFC" desc="App background" sub="pageBg"/>
+          <DSSwatch name="Card White" hex="#FFFFFF" desc="Card surfaces" sub="cardBg"/>
+          <DSSwatch name="Border" hex="#E2E8F0" desc="Default borders" sub="border"/>
+          <DSSwatch name="Border Light" hex="#F1F5F9" desc="Subtle dividers" sub="borderLight"/>
+        </div>
+
+        <div style={DSH}>Text Hierarchy</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:24}}>
+          <DSSwatch name="Text Primary" hex="#1E293B" desc="Headings, labels" sub="text1"/>
+          <DSSwatch name="Text Secondary" hex="#64748B" desc="Descriptions, body" sub="text2"/>
+          <DSSwatch name="Text Tertiary" hex="#94A3B8" desc="Captions, muted" sub="text3"/>
+        </div>
+
+        <div style={DSH}>Brand & Navigation</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:24}}>
+          <DSSwatch name="Navy" hex="#1B2559" desc="Navigation, structure" sub="navy"/>
+          <DSSwatch name="Rose" hex="#D4697A" desc="Brand accent, active states" sub="rose"/>
+          <DSSwatch name="Rose Light" hex="rgba(212,105,122,.06)" desc="Rose background fill" sub="roseBg"/>
+        </div>
+
+        <div style={DSH}>Semantic Status Colors</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:24}}>
+          <DSSwatch name="Teal" hex="#0EA5E9" desc="New / In Progress" sub="teal"/>
+          <DSSwatch name="Green" hex="#22C55E" desc="Completed / Success" sub="green"/>
+          <DSSwatch name="Amber" hex="#EAB308" desc="Action Required" sub="amber"/>
+          <DSSwatch name="Red" hex="#EF4444" desc="Blocked / Error" sub="red"/>
+        </div>
+
+        <div style={DSH}>Color Application — Three-Tier System</div>
+        <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>Each semantic color has three variants for layered usage:</p>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:24}}>
+          {[
+            ["Teal",DS_COLORS.teal,DS_COLORS.tealBg,DS_COLORS.tealBd],
+            ["Green",DS_COLORS.green,DS_COLORS.greenBg,DS_COLORS.greenBd],
+            ["Amber",DS_COLORS.amber,DS_COLORS.amberBg,DS_COLORS.amberBd],
+            ["Red",DS_COLORS.red,DS_COLORS.redBg,DS_COLORS.redBd]
+          ].map(function(c){
+            return <div key={c[0]} style={{background:DS_COLORS.cardBg,borderRadius:10,border:"1px solid "+DS_COLORS.border,overflow:"hidden"}}>
+              <div style={{padding:"8px 10px",fontSize:11,fontWeight:600,color:c[1],fontFamily:FT}}>{c[0]}</div>
+              <div style={{display:"flex",flexDirection:"column"}}>
+                <div style={{padding:"10px 12px",background:c[1]}}><span style={{fontSize:10,color:"#fff",fontFamily:MN,fontWeight:600}}>Foreground</span></div>
+                <div style={{padding:"10px 12px",background:c[2],borderTop:"1px solid "+DS_COLORS.border}}><span style={{fontSize:10,color:c[1],fontFamily:MN}}>Background (8%)</span></div>
+                <div style={{padding:"10px 12px",background:"transparent",borderTop:"2px solid "+c[3]}}><span style={{fontSize:10,color:c[1],fontFamily:MN}}>Border (20%)</span></div>
+              </div>
+            </div>;
+          })}
+        </div>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Status Color Mapping</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              ["Status Mapping","Teal = New/In Progress, Amber = Action Required, Red = Blocked/Error, Green = Completed/Success."],
+              ["Contrast","Primary text (#1E293B) on light backgrounds maintains WCAG AA. Use text2 for secondary, text3 only for muted captions."],
+              ["Backgrounds","Never use semantic foreground colors as backgrounds directly. Use the background variant at 8% opacity."],
+              ["Left Border Accent","Activity feed items use a colored left border (3px) to indicate status category without adding visual noise."]
+            ].map(function(r,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{r[0]}</div>
+                <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{r[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderTypography(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Typography</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The Compliance Tracker uses Inter as its primary typeface — clean, legible at dashboard densities, with strong tabular numeral support.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Typefaces</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div style={{padding:16,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:24,fontWeight:600,color:DS_COLORS.text1,fontFamily:DS_FONT,marginBottom:8}}>Inter</div>
+              <div style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT,marginBottom:4}}>Primary typeface for all UI elements</div>
+              <div style={{fontSize:11,color:DS_COLORS.text3,fontFamily:MN}}>font-family: 'Inter', system-ui, sans-serif</div>
+              <div style={{marginTop:12,fontSize:14,color:DS_COLORS.text1,fontFamily:DS_FONT,lineHeight:1.8}}>
+                <span style={{fontWeight:300}}>Light 300 </span>
+                <span style={{fontWeight:400}}>Regular 400 </span>
+                <span style={{fontWeight:500}}>Medium 500 </span>
+                <span style={{fontWeight:600}}>Semibold 600 </span>
+                <span style={{fontWeight:700}}>Bold 700</span>
+              </div>
+            </div>
+            <div style={{padding:16,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:24,fontWeight:500,color:DS_COLORS.text1,fontFamily:MN,marginBottom:8}}>JetBrains Mono</div>
+              <div style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT,marginBottom:4}}>Monospace for dates, IDs, percentages</div>
+              <div style={{fontSize:11,color:DS_COLORS.text3,fontFamily:MN}}>font-family: 'JetBrains Mono', monospace</div>
+              <div style={{marginTop:12,fontFamily:MN,lineHeight:1.8}}>
+                <span style={{fontSize:14,color:DS_COLORS.text1}}>2025-01-22 · 10% · Registration #4521</span>
+              </div>
+            </div>
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Type Scale</div>
+          <div style={{display:"flex",flexDirection:"column",gap:2}}>
+            {[
+              {size:24,weight:700,usage:"Page title",sample:"Compliance Tracker"},
+              {size:20,weight:700,usage:"Section header",sample:"Dashboard"},
+              {size:16,weight:600,usage:"Card title",sample:"New York Payroll Registration"},
+              {size:14,weight:600,usage:"Subsection header",sample:"Recent Activity"},
+              {size:13,weight:500,usage:"Body text, descriptions",sample:"Track the progress of your registrations and filings"},
+              {size:12,weight:400,usage:"Standard body, labels",sample:"Submitted on January 18, 2025"},
+              {size:11,weight:500,usage:"Badges, buttons, small labels",sample:"Registration Automation Received"},
+              {size:10,weight:600,usage:"Uppercase labels, captions",sample:"ESTIMATED COMPLETION"}
+            ].map(function(t,i){
+              return <div key={i} style={{display:"flex",alignItems:"baseline",gap:12,padding:"8px 12px",background:i%2===0?DS_COLORS.pageBg:"transparent",borderRadius:6}}>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,minWidth:48,textAlign:"right"}}>{t.size}px</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,minWidth:40}}>{t.weight}</span>
+                <span style={{fontSize:t.size,fontWeight:t.weight,color:DS_COLORS.text1,fontFamily:DS_FONT,flex:1}}>{t.sample}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT}}>{t.usage}</span>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Numeric Typography</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>KPI values and progress percentages use tabular numerals for column alignment.</p>
+          <div style={{display:"flex",gap:12}}>
+            {[
+              {label:"New",value:"2",color:DS_COLORS.teal},
+              {label:"In Progress",value:"2",color:DS_COLORS.teal},
+              {label:"Action Required",value:"1",color:DS_COLORS.amber},
+              {label:"Completed",value:"1",color:DS_COLORS.green}
+            ].map(function(k,i){
+              return <div key={i} style={{flex:1,padding:"12px 14px",background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
+                  <div style={{width:8,height:8,borderRadius:"50%",background:k.color,flexShrink:0}}/>
+                  <span style={{fontSize:28,fontWeight:700,color:DS_COLORS.text1,fontFamily:DS_FONT,fontVariantNumeric:"tabular-nums",lineHeight:1}}>{k.value}</span>
+                </div>
+                <div style={{fontSize:11,color:DS_COLORS.text2,fontFamily:DS_FONT}}>{k.label}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderSpacing(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Spacing Scale</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Based on a 4px base unit. Spacing is consistent across gap, padding, and margin.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Visual Spacing Scale</div>
+          {[4,8,12,16,20,24,32,48].map(function(s){
+            return <div key={s} style={{display:"flex",alignItems:"center",gap:12,marginBottom:8}}>
+              <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,minWidth:36,textAlign:"right"}}>{s}px</span>
+              <div style={{width:s,height:20,background:DS_COLORS.rose,borderRadius:2,opacity:0.6}}/>
+              <div style={{flex:1,height:20,background:DS_COLORS.roseBg,borderRadius:2,display:"flex",alignItems:"center",paddingLeft:8}}>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT}}>
+                  {s===4?"Minimal — icon spacing, inline gaps":s===8?"Small — badge padding, tight gaps":s===12?"Medium — card internal, section gaps":s===16?"Standard — card padding, component spacing":s===20?"Large — card content padding":s===24?"XL — section separation":s===32?"XXL — major section spacing":"Page — outer padding, major layout"}
+                </span>
+              </div>
+            </div>;
+          })}
+        </DSCard>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Border Radius</div>
+          <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+            {[
+              {r:4,label:"4px",usage:"Minimal — small elements"},
+              {r:6,label:"6px",usage:"Badges, chips, small buttons"},
+              {r:8,label:"8px",usage:"Buttons, inner containers"},
+              {r:10,label:"10px",usage:"Cards (primary container)"},
+              {r:12,label:"12px",usage:"Large cards, modals"},
+              {r:20,label:"20px",usage:"Filter pills, tab containers"},
+              {r:999,label:"Full",usage:"Circular icons, dots"}
+            ].map(function(item){
+              return <div key={item.r} style={{textAlign:"center"}}>
+                <div style={{width:48,height:48,borderRadius:item.r===999?"50%":item.r,background:DS_COLORS.pageBg,border:"2px solid "+DS_COLORS.rose,margin:"0 auto 6px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <span style={{fontSize:10,color:DS_COLORS.rose,fontFamily:MN,fontWeight:600}}>{item.label}</span>
+                </div>
+                <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT,maxWidth:80}}>{item.usage}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Component Padding Reference</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {[
+              ["Badge","3px 10px"],["Button (sm)","5px 12px"],["Button","7px 16px"],["Filter Chip","6px 14px"],
+              ["KPI Tile","16px 20px"],["Card","16px 18px"],["Activity Item","14px 16px"],["Page Container","28px 48px"]
+            ].map(function(item,i){
+              return <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 10px",background:i%2===0?DS_COLORS.pageBg:"transparent",borderRadius:4}}>
+                <span style={{fontSize:11,color:DS_COLORS.text2,fontFamily:FT}}>{item[0]}</span>
+                <span style={{fontSize:11,color:DS_COLORS.text1,fontFamily:MN}}>{item[1]}</span>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderElevation(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Elevation & Shadows</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The Compliance Tracker uses subtle shadows and border accents to communicate depth and status.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Shadow Levels</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+            {[
+              ["Level 0 — Flat","No shadow, border only","none","1px solid "+DS_COLORS.border],
+              ["Level 1 — Card","Subtle lift for cards","0 1px 3px rgba(0,0,0,.06)","1px solid "+DS_COLORS.border],
+              ["Level 2 — Elevated","Hover state, modals","0 4px 12px rgba(0,0,0,.08)","1px solid "+DS_COLORS.border]
+            ].map(function(s,i){
+              return <div key={i} style={{padding:20,background:DS_COLORS.cardBg,borderRadius:10,border:s[3],boxShadow:s[2],textAlign:"center"}}>
+                <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,marginBottom:4,fontFamily:FT}}>{s[0]}</div>
+                <div style={{fontSize:11,color:DS_COLORS.text2,fontFamily:FT,marginBottom:8}}>{s[1]}</div>
+                <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>{s[2]==="none"?"border only":s[2]}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Left Border Accent</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>Activity feed items use a 3px colored left border to indicate status category. Hover to see the effect:</p>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            {[
+              ["Teal — In Progress",DS_COLORS.teal,"Registration Processing Started"],
+              ["Amber — Action Required",DS_COLORS.amber,"Additional Documentation Required"],
+              ["Green — Completed","#22C55E","Registration Complete"],
+              ["Red — Blocked",DS_COLORS.red,"Registration On Hold"]
+            ].map(function(item,i){
+              return <div key={i} style={{padding:"12px 16px",background:DS_COLORS.pageBg,borderRadius:8,borderLeft:"3px solid "+item[1],transition:"all 0.2s"}}>
+                <div style={{fontSize:12,fontWeight:500,color:DS_COLORS.text1,fontFamily:FT}}>{item[2]}</div>
+                <div style={{fontSize:10,color:item[1],fontFamily:FT,marginTop:2}}>{item[0]}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Attention Glow</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>The alert banner uses a subtle amber glow animation to draw attention to action-required items.</p>
+          <div style={{display:"flex",justifyContent:"center"}}>
+            <div style={{padding:"10px 20px",background:DS_COLORS.amberBg,border:"1px solid "+DS_COLORS.amberBd,borderRadius:8,animation:"gl 2s ease-in-out infinite",display:"inline-flex",alignItems:"center",gap:6}}>
+              <span style={{fontSize:14}}>⚠</span>
+              <span style={{fontSize:12,color:DS_COLORS.amber,fontWeight:500,fontFamily:FT}}>1 registration needs your attention</span>
+            </div>
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompBadge(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Status Badge</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Status indicators with semantic color mapping used across registration cards, activity feed, and dashboard.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>All Variants</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:16,fontFamily:FT}}>Each badge type maps to a registration status with a specific icon, color, and label.</p>
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            {[
+              ["new","New","Teal","Registration just created, not yet processing","📋 New (2)"],
+              ["in-progress","In Progress","Teal","Actively being processed by Mosey or agency","⏳ In Progress (2)"],
+              ["action-required","Action Required","Amber","User action needed — documentation, forms, etc.","⚠ Action Required (1)"],
+              ["blocked","Blocked","Red","Registration stalled, requires intervention","🚫 Registration On Hold: Waiting on Liability"],
+              ["completed","Completed","Green","Registration successfully filed and confirmed","✓ Completed (1)"],
+              ["category","Category","Navy","Domain classification — Payroll, HR, Entity, Tax","⊞ Payroll"],
+              ["automation","Automation","Rose","System-generated status from Mosey automation","⚡ Registration Automation Received"]
+            ].map(function(b){
+              return <div key={b[0]} style={{display:"flex",alignItems:"center",gap:16,padding:"8px 12px",background:DS_COLORS.pageBg,borderRadius:8}}>
+                <DSBadge type={b[0]}>{b[4]}</DSBadge>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text1,fontFamily:FT}}>{b[1]} — {b[2]}</div>
+                  <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT,marginTop:1}}>{b[3]}</div>
+                </div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Usage Rules</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.green,marginBottom:4,fontFamily:FT}}>Do</div>
+              <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>Use status badges consistently — same color always means same status. Include count in parentheses for tab/filter badges. Pair icon + text for clarity.</p>
+            </div>
+            <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.red,marginBottom:4,fontFamily:FT}}>Don't</div>
+              <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>Don't mix severity meanings. Don't use badges for interactive elements — they're display-only. Don't show badges without text labels.</p>
+            </div>
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompButton(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Button</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Primary and outline buttons. Hover over each to see interactive states.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Variants & States</div>
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text3,marginBottom:8,fontFamily:FT}}>Primary (Navy Fill)</div>
+            <div style={{display:"flex",gap:8,alignItems:"center"}}>
+              <DSBtn primary>Contact Support</DSBtn>
+              <DSBtn primary sm>View Details</DSBtn>
+            </div>
+          </div>
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text3,marginBottom:8,fontFamily:FT}}>Outline (Border Only)</div>
+            <div style={{display:"flex",gap:8,alignItems:"center"}}>
+              <DSBtn outline>View More</DSBtn>
+              <DSBtn outline sm>Filter</DSBtn>
+            </div>
+          </div>
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text3,marginBottom:8,fontFamily:FT}}>Disabled State</div>
+            <div style={{display:"flex",gap:8,alignItems:"center"}}>
+              <DSBtn primary disabled>Disabled Primary</DSBtn>
+              <DSBtn outline disabled>Disabled Outline</DSBtn>
+            </div>
+          </div>
+          <div style={{marginBottom:16}}>
+            <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text3,marginBottom:8,fontFamily:FT}}>In Context</div>
+            <div style={{padding:16,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:14,fontWeight:600,color:DS_COLORS.text1,marginBottom:4,fontFamily:FT}}>Need Help?</div>
+              <div style={{fontSize:12,color:DS_COLORS.text2,marginBottom:12,fontFamily:FT}}>We're here to help guide you through the registration process</div>
+              <DSBtn outline>Contact Support</DSBtn>
+            </div>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Spec</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {[["Border Radius","8px"],["Font","Inter, 12px / 11px (sm)"],["Font Weight","500"],["Transition","all 0.2s"],["Primary BG","#1B2559 (Navy)"],["Primary Hover","#2D3A6E (Navy Light)"],["Outline Border","1px solid #E2E8F0"],["Hover Lift","translateY(-1px)"]].map(function(s,i){
+              return <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"4px 8px",fontSize:10,background:i%2===0?DS_COLORS.pageBg:"transparent",borderRadius:4}}>
+                <span style={{color:DS_COLORS.text2,fontFamily:FT}}>{s[0]}</span>
+                <span style={{color:DS_COLORS.text1,fontFamily:MN}}>{s[1]}</span>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompKPI(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>KPI Tile</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>At-a-glance metric cards for the dashboard header. Each tile shows a count with a status icon and label.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Live Example — Dashboard KPI Row</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:12}}>
+            {[
+              {icon:"📋",value:"2",label:"New",color:DS_COLORS.teal},
+              {icon:"⏳",value:"2",label:"In Progress",color:DS_COLORS.teal},
+              {icon:"⚠",value:"1",label:"Action Required",color:DS_COLORS.amber},
+              {icon:"✓",value:"1",label:"Completed",color:DS_COLORS.green}
+            ].map(function(k,i){
+              return <div key={i} style={{padding:"16px 20px",background:DS_COLORS.pageBg,borderRadius:10,border:"1px solid "+DS_COLORS.border,transition:"all 0.2s"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                  <div style={{width:24,height:24,borderRadius:"50%",background:k.color+"15",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>{k.icon}</div>
+                  <span style={{fontSize:28,fontWeight:700,color:DS_COLORS.text1,fontFamily:DS_FONT,fontVariantNumeric:"tabular-nums",lineHeight:1}}>{k.value}</span>
+                </div>
+                <div style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT}}>{k.label}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Spec & Usage</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>Structure</div>
+              <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>Icon circle (24px) + Value (28px, bold) + Label (12px, secondary). Padding: 16px 20px. Border-radius: 10px. Grid layout: 4 columns.</p>
+            </div>
+            <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+              <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>Rules</div>
+              <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>Always show 4 KPIs in the dashboard header. Values use tabular-nums. Icon color matches the status semantic color at 15% opacity background.</p>
+            </div>
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompCard(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Registration Card</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>The primary container for displaying individual registration status with progress tracker.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Live Example — Registration Card</div>
+          <div style={{padding:20,background:DS_COLORS.pageBg,borderRadius:10,border:"1px solid "+DS_COLORS.border}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                  <span style={{fontSize:14}}>📋</span>
+                  <span style={{fontSize:16,fontWeight:600,color:DS_COLORS.text1,fontFamily:DS_FONT}}>New York Payroll Registration</span>
+                  <DSBadge type="category">⊞ Payroll</DSBadge>
+                </div>
+                <div style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT}}>Submitted on January 18, 2025</div>
+              </div>
+              <DSBadge type="automation">Registration Automation Received</DSBadge>
+            </div>
+            <div style={{marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                <span style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT}}>Progress</span>
+                <span style={{fontSize:12,color:DS_COLORS.text1,fontFamily:MN,fontWeight:500}}>10%</span>
+              </div>
+              <div style={{height:6,background:DS_COLORS.borderLight,borderRadius:3,overflow:"hidden"}}>
+                <div style={{width:"10%",height:"100%",background:DS_COLORS.teal,borderRadius:3,transition:"width 0.6s ease"}}/>
+              </div>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:12}}>
+              {[
+                {label:"Registration Received",active:true},
+                {label:"Processing Started",active:false},
+                {label:"Submitted to Agency",active:false},
+                {label:"Registration Complete",active:false}
+              ].map(function(step,i){
+                return <div key={i} style={{display:"flex",alignItems:"center",gap:8}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:step.active?DS_COLORS.teal:DS_COLORS.border,flexShrink:0}}/>
+                  <span style={{fontSize:12,color:step.active?DS_COLORS.text1:DS_COLORS.text3,fontWeight:step.active?500:400,fontFamily:DS_FONT}}>{step.label}</span>
+                  {step.active && <span style={{marginLeft:"auto",fontSize:11,color:DS_COLORS.teal,fontWeight:500,fontFamily:DS_FONT}}>Current</span>}
+                </div>;
+              })}
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:8,borderTop:"1px solid "+DS_COLORS.border}}>
+              <div style={{display:"flex",alignItems:"center",gap:4}}>
+                <span style={{fontSize:12}}>📅</span>
+                <span style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT}}>Estimated completion: February 15, 2025</span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer"}}>
+                <span style={{fontSize:12}}>👁</span>
+                <span style={{fontSize:12,color:DS_COLORS.text1,fontWeight:500,fontFamily:DS_FONT}}>View Details</span>
+              </div>
+            </div>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Card Anatomy</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+            {[
+              ["Header","Icon + title + category badge + status badge. Title: 16px/600. Submitted date below in secondary text."],
+              ["Progress","Label + percentage (mono) + progress bar. Bar: 6px height, rounded, teal fill on light track."],
+              ["Steps","Vertical step list with dot indicators. Active step: filled teal dot + 'Current' label. Inactive: border dot."],
+              ["Footer","Estimated completion date (left) + View Details link (right). Separated by top border."],
+              ["Spacing","Card padding: 20px. Internal gap: 12px between sections. Step gap: 6px."],
+              ["Border","1px solid #E2E8F0. Border-radius: 10px. Background: #F8FAFC (page) or #FFFFFF (elevated)."]
+            ].map(function(item,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{item[0]}</div>
+                <p style={{fontSize:10,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{item[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompProgress(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Progress Tracker</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Step-by-step progress visualization for registration lifecycle. The core UX pattern inspired by the Domino's Pizza Tracker.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Progress Bar States</div>
+          <div style={{display:"flex",flexDirection:"column",gap:16}}>
+            {[
+              {label:"10% — Registration Received",pct:10,color:DS_COLORS.teal},
+              {label:"35% — Processing Started",pct:35,color:DS_COLORS.teal},
+              {label:"65% — Submitted to Agency",pct:65,color:DS_COLORS.teal},
+              {label:"100% — Complete",pct:100,color:DS_COLORS.green}
+            ].map(function(p,i){
+              return <div key={i}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                  <span style={{fontSize:11,color:DS_COLORS.text2,fontFamily:FT}}>{p.label}</span>
+                  <span style={{fontSize:11,color:DS_COLORS.text1,fontFamily:MN}}>{p.pct}%</span>
+                </div>
+                <div style={{height:6,background:DS_COLORS.borderLight,borderRadius:3,overflow:"hidden"}}>
+                  <div style={{width:p.pct+"%",height:"100%",background:p.color,borderRadius:3,transition:"width 0.6s ease"}}/>
+                </div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Step Indicator States</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:12}}>
+            {[
+              {label:"Completed",dotBg:DS_COLORS.green,dotBd:DS_COLORS.green,textColor:DS_COLORS.text1},
+              {label:"Current",dotBg:DS_COLORS.teal,dotBd:DS_COLORS.teal,textColor:DS_COLORS.text1},
+              {label:"Upcoming",dotBg:"transparent",dotBd:DS_COLORS.border,textColor:DS_COLORS.text3},
+              {label:"Blocked",dotBg:DS_COLORS.red,dotBd:DS_COLORS.red,textColor:DS_COLORS.text1}
+            ].map(function(s){
+              return <div key={s.label} style={{padding:16,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,textAlign:"center"}}>
+                <div style={{width:16,height:16,borderRadius:"50%",background:s.dotBg,border:"2px solid "+s.dotBd,margin:"0 auto 8px"}}/>
+                <div style={{fontSize:12,fontWeight:500,color:s.textColor,fontFamily:FT}}>{s.label}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Full Progress Tracker</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>The 4-step lifecycle that every registration follows:</p>
+          <div style={{display:"flex",alignItems:"center",gap:0,marginBottom:8}}>
+            {[
+              {label:"Registration Received",done:true},
+              {label:"Processing Started",done:false,current:true},
+              {label:"Submitted to Agency",done:false},
+              {label:"Registration Complete",done:false}
+            ].map(function(step,i){
+              return <div key={i} style={{flex:1,display:"flex",alignItems:"center"}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",flex:1}}>
+                  <div style={{width:20,height:20,borderRadius:"50%",background:step.done?DS_COLORS.green:step.current?DS_COLORS.teal:"transparent",border:"2px solid "+(step.done?DS_COLORS.green:step.current?DS_COLORS.teal:DS_COLORS.border),display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {step.done && <span style={{color:"#fff",fontSize:10,fontWeight:700}}>✓</span>}
+                  </div>
+                  <div style={{fontSize:10,color:step.done||step.current?DS_COLORS.text1:DS_COLORS.text3,fontWeight:step.current?600:400,fontFamily:FT,marginTop:6,textAlign:"center",maxWidth:80}}>{step.label}</div>
+                </div>
+                {i<3 && <div style={{height:2,flex:1,background:step.done?DS_COLORS.green:DS_COLORS.border,marginTop:-16}}/>}
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompFilter(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Filter Chip</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Category filter pills for narrowing the dashboard view. Click to interact.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Interactive Demo — Filter by Category</div>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+            <span style={{fontSize:12,color:DS_COLORS.text2,fontFamily:FT}}>Filter by category:</span>
+            {[
+              {label:"All (9)",icon:"⊞",active:dsFilterActive==="All"},
+              {label:"Payroll (3)",icon:"⊞",active:dsFilterActive==="Payroll"},
+              {label:"HR (1)",icon:"👥",active:dsFilterActive==="HR"},
+              {label:"Entity (3)",icon:"📁",active:dsFilterActive==="Entity"},
+              {label:"Tax (2)",icon:"💰",active:dsFilterActive==="Tax"}
+            ].map(function(f){
+              var key = f.label.split(" ")[0];
+              return <button key={key} onClick={function(){setDsFilterActive(key);}} style={{
+                display:"inline-flex",alignItems:"center",gap:4,padding:"6px 14px",borderRadius:20,
+                fontSize:12,fontWeight:500,fontFamily:DS_FONT,cursor:"pointer",transition:"all 0.2s",
+                border:f.active?"none":"1px solid "+DS_COLORS.border,
+                background:f.active?DS_COLORS.rose:"transparent",
+                color:f.active?"#fff":DS_COLORS.text2
+              }}>{f.icon} {f.label}</button>;
+            })}
+          </div>
+          <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+            <span style={{fontSize:12,color:DS_COLORS.text2,fontFamily:FT}}>Active filter: </span>
+            <span style={{fontSize:12,color:DS_COLORS.rose,fontWeight:600,fontFamily:FT}}>{dsFilterActive}</span>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>States</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              ["Active","Background: Rose (#D4697A), Text: White, No border. Applied when filter is selected."],
+              ["Inactive","Background: Transparent, Text: Secondary, Border: 1px solid #E2E8F0. Default state."],
+              ["Hover (Inactive)","Background: rgba(0,0,0,0.02), subtle lift. Cursor: pointer."],
+              ["Container","Inline-flex with 8px gap. Always include an 'All' option with total count."]
+            ].map(function(s,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{s[0]}</div>
+                <p style={{fontSize:10,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{s[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompTabs(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Status Tabs</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Segmented control for filtering registrations by status. The active tab shows a filled background. Click to switch.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Interactive Demo</div>
+          <div style={{display:"inline-flex",gap:0,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,overflow:"hidden",marginBottom:12}}>
+            {[
+              {label:"New (2)",icon:"📋",id:"New"},
+              {label:"In Progress (2)",icon:"⏳",id:"In Progress"},
+              {label:"Action Required (1)",icon:"⚠",id:"Action Required"},
+              {label:"Completed (1)",icon:"✓",id:"Completed"}
+            ].map(function(tab){
+              var isA = dsTabActive===tab.id;
+              return <button key={tab.id} onClick={function(){setDsTabActive(tab.id);}} style={{
+                display:"flex",alignItems:"center",gap:4,padding:"8px 16px",
+                fontSize:12,fontWeight:isA?600:400,fontFamily:DS_FONT,cursor:"pointer",
+                border:"none",borderBottom:isA?"2px solid "+DS_COLORS.navy:"2px solid transparent",
+                background:isA?DS_COLORS.cardBg:"transparent",
+                color:isA?DS_COLORS.text1:DS_COLORS.text3,
+                transition:"all 0.2s"
+              }}>{tab.icon} {tab.label}</button>;
+            })}
+          </div>
+          <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+            <span style={{fontSize:12,color:DS_COLORS.text2,fontFamily:FT}}>Active tab: </span>
+            <span style={{fontSize:12,color:DS_COLORS.navy,fontWeight:600,fontFamily:FT}}>{dsTabActive}</span>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Top Navigation Tabs</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:12,fontFamily:FT}}>The top-level Dashboard / Activity navigation uses underline-style tabs:</p>
+          <div style={{display:"flex",gap:24,borderBottom:"1px solid "+DS_COLORS.border,paddingBottom:0,marginBottom:8}}>
+            <span style={{fontSize:14,fontWeight:600,color:DS_COLORS.rose,paddingBottom:8,borderBottom:"2px solid "+DS_COLORS.rose,fontFamily:DS_FONT}}>Dashboard</span>
+            <span style={{fontSize:14,fontWeight:400,color:DS_COLORS.text3,paddingBottom:8,fontFamily:DS_FONT}}>Activity</span>
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompActivity(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Activity Feed Item</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Timeline-style event cards showing registration status changes with colored left borders.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Live Examples</div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            <div style={{padding:"14px 16px",background:DS_COLORS.cardBg,borderRadius:8,borderLeft:"3px solid "+DS_COLORS.teal,border:"1px solid "+DS_COLORS.border,borderLeftWidth:3,borderLeftColor:DS_COLORS.teal}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                <div>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                    <span style={{fontSize:12}}>⏳</span>
+                    <span style={{fontSize:14,fontWeight:600,color:DS_COLORS.text1,fontFamily:DS_FONT}}>Registration Processing Started</span>
+                    <DSBadge type="category">⊞ Payroll</DSBadge>
+                  </div>
+                  <div style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT,marginBottom:6}}>California Payroll Registration moved to processing phase</div>
+                  <div style={{display:"inline-flex",padding:"4px 10px",background:DS_COLORS.pageBg,borderRadius:6,border:"1px solid "+DS_COLORS.border}}>
+                    <span style={{fontSize:11,color:DS_COLORS.text1,fontFamily:DS_FONT}}>California Payroll Registration</span>
+                  </div>
+                </div>
+                <div style={{textAlign:"right",flexShrink:0}}>
+                  <div style={{fontSize:11,color:DS_COLORS.text3,fontFamily:DS_FONT}}>2 hours ago</div>
+                  <div style={{fontSize:11,color:DS_COLORS.text3,fontFamily:MN,marginTop:2}}>📅 2025-01-22</div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{padding:"14px 16px",background:DS_COLORS.cardBg,borderRadius:8,borderLeft:"3px solid "+DS_COLORS.amber,border:"1px solid "+DS_COLORS.border,borderLeftWidth:3,borderLeftColor:DS_COLORS.amber}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                <div>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                    <span style={{fontSize:12}}>⚠</span>
+                    <span style={{fontSize:14,fontWeight:600,color:DS_COLORS.text1,fontFamily:DS_FONT}}>Additional Documentation Required</span>
+                    <DSBadge type="category">👥 HR</DSBadge>
+                  </div>
+                  <div style={{fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT,marginBottom:6}}>Delaware Secretary of State Filing needs signatory forms</div>
+                  <div style={{display:"inline-flex",padding:"4px 10px",background:DS_COLORS.pageBg,borderRadius:6,border:"1px solid "+DS_COLORS.border}}>
+                    <span style={{fontSize:11,color:DS_COLORS.text1,fontFamily:DS_FONT}}>Delaware Secretary of State Filing</span>
+                  </div>
+                </div>
+                <div style={{textAlign:"right",flexShrink:0}}>
+                  <div style={{fontSize:11,color:DS_COLORS.text3,fontFamily:DS_FONT}}>4 hours ago</div>
+                  <div style={{fontSize:11,color:DS_COLORS.text3,fontFamily:MN,marginTop:2}}>📅 2025-01-22</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Anatomy</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+            {[
+              ["Left Border","3px colored border — Teal for progress, Amber for action, Green for complete, Red for blocked."],
+              ["Header Row","Status icon + Event title (14px/600) + Category badge. Right-aligned timestamp."],
+              ["Body","Description text (12px, secondary). Registration link chip below in light background pill."],
+              ["Timestamp","Relative time ('2 hours ago') + absolute date (2025-01-22) in mono."],
+              ["Container","Padding: 14px 16px. Border-radius: 8px. Background: White. Border: 1px solid #E2E8F0."],
+              ["Stacking","Vertical stack with 10px gap. Newest events at top."]
+            ].map(function(item,i){
+              return <div key={i} style={{padding:10,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{item[0]}</div>
+                <p style={{fontSize:10,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{item[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompAlert(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Alert Banner</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Top-of-dashboard notification banner for urgent compliance status. Uses animated glow for attention.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Variants</div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            <div style={{padding:"10px 16px",background:DS_COLORS.amberBg,border:"1px solid "+DS_COLORS.amberBd,borderRadius:8,display:"flex",alignItems:"center",gap:8,animation:"gl 2s ease-in-out infinite"}}>
+              <span style={{fontSize:14}}>⚠</span>
+              <span style={{fontSize:12,color:DS_COLORS.amber,fontWeight:500,fontFamily:DS_FONT}}>1 registration needs your attention</span>
+            </div>
+            <div style={{padding:"10px 16px",background:DS_COLORS.redBg,border:"1px solid "+DS_COLORS.redBd,borderRadius:8,display:"flex",alignItems:"center",gap:8}}>
+              <span style={{fontSize:14}}>🚫</span>
+              <span style={{fontSize:12,color:DS_COLORS.red,fontWeight:500,fontFamily:DS_FONT}}>2 registrations are blocked — immediate action required</span>
+            </div>
+            <div style={{padding:"10px 16px",background:DS_COLORS.greenBg,border:"1px solid "+DS_COLORS.greenBd,borderRadius:8,display:"flex",alignItems:"center",gap:8}}>
+              <span style={{fontSize:14}}>✓</span>
+              <span style={{fontSize:12,color:DS_COLORS.green,fontWeight:500,fontFamily:DS_FONT}}>All registrations are on track — no action needed</span>
+            </div>
+            <div style={{padding:"10px 16px",background:DS_COLORS.tealBg,border:"1px solid "+DS_COLORS.tealBd,borderRadius:8,display:"flex",alignItems:"center",gap:8}}>
+              <span style={{fontSize:14}}>ℹ</span>
+              <span style={{fontSize:12,color:DS_COLORS.teal,fontWeight:500,fontFamily:DS_FONT}}>3 new registrations created for California expansion</span>
+            </div>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Spec</div>
+          <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.6,margin:0,fontFamily:FT}}>Padding: 10px 16px. Border-radius: 8px. Uses semantic background at 8% opacity + border at 20% opacity. Action-required variant uses the gl (glow) animation for attention. Font: 12px / 500. Positioned at top-right of dashboard header.</p>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompNav(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Navigation Sidebar</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Left-side icon navigation with collapsible sidebar. Icons use semantic colors for active/inactive states.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Live Example</div>
+          <div style={{display:"flex",gap:20}}>
+            <div style={{width:48,background:DS_COLORS.cardBg,borderRadius:10,border:"1px solid "+DS_COLORS.border,padding:"12px 0",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+              {[
+                {icon:"🏠",active:false},{icon:"⊞",active:true},{icon:"📍",active:false},{icon:"📅",active:false},
+                {icon:"📁",active:false},{icon:"⚙",active:false},{icon:"✉",active:false},{icon:"📊",active:false}
+              ].map(function(item,i){
+                return <div key={i} style={{
+                  width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",
+                  fontSize:14,cursor:"pointer",transition:"all 0.15s",
+                  background:item.active?DS_COLORS.roseBg:"transparent",
+                  position:"relative"
+                }}>
+                  {item.icon}
+                  {item.active && <div style={{position:"absolute",right:-1,top:"50%",transform:"translateY(-50%)",width:3,height:16,background:DS_COLORS.rose,borderRadius:2}}/>}
+                </div>;
+              })}
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,fontFamily:FT}}>
+                <strong style={{color:DS_COLORS.text1}}>Collapsed state:</strong> Icon-only sidebar (48px wide). Active item shows rose background tint and right-edge indicator bar.
+              </div>
+              <div style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,fontFamily:FT,marginTop:8}}>
+                <strong style={{color:DS_COLORS.text1}}>Icon sizing:</strong> 14px emoji icons centered in 32px touch targets. 4px gap between items. 12px vertical padding.
+              </div>
+              <div style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,fontFamily:FT,marginTop:8}}>
+                <strong style={{color:DS_COLORS.text1}}>Active indicator:</strong> 3px wide, 16px tall, Rose (#D4697A), right-aligned with 2px border-radius.
+              </div>
+            </div>
+          </div>
+        </DSCard>
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Bottom Navigation</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:10,fontFamily:FT}}>Search, Settings, and Support icons are anchored to the bottom of the sidebar:</p>
+          <div style={{width:48,background:DS_COLORS.cardBg,borderRadius:10,border:"1px solid "+DS_COLORS.border,padding:"8px 0",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+            {["🔍","⚙","🌐"].map(function(icon,i){
+              return <div key={i} style={{width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,cursor:"pointer"}}>{icon}</div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompHelp(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Help Card</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Contextual help section at the bottom of the dashboard. Provides guidance without requiring users to leave the page.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Live Example</div>
+          <div style={{padding:20,background:DS_COLORS.cardBg,borderRadius:10,border:"1px solid "+DS_COLORS.border}}>
+            <div style={{fontSize:16,fontWeight:600,color:DS_COLORS.text1,marginBottom:4,fontFamily:DS_FONT}}>Need Help?</div>
+            <div style={{fontSize:13,color:DS_COLORS.text2,marginBottom:14,fontFamily:DS_FONT}}>We're here to help guide you through the registration process</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:16}}>
+              {[
+                "Check your email regularly for updates and action items.",
+                "Processing times vary by state and registration type.",
+                "Contact support only if you have urgent questions not answered here."
+              ].map(function(tip,i){
+                return <div key={i} style={{display:"flex",gap:6,fontSize:12,color:DS_COLORS.text2,fontFamily:DS_FONT}}>
+                  <span style={{color:DS_COLORS.text3}}>•</span>{tip}
+                </div>;
+              })}
+            </div>
+            <DSBtn outline>Contact Support</DSBtn>
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompEmpty(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Empty State</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Placeholder shown when a section has no data. Provides context and suggests next actions.</p>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Variants</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            {[
+              {title:"No Active Registrations",desc:"You don't have any registrations in progress. New registrations will appear here when created.",icon:"📋",action:"Start New Registration"},
+              {title:"No Recent Activity",desc:"There haven't been any status changes recently. Activity will appear as registrations progress.",icon:"📊",action:"View All History"},
+              {title:"All Complete",desc:"All your registrations have been completed successfully. Great work!",icon:"✓",action:null},
+              {title:"No Results",desc:"No registrations match your current filters. Try adjusting your search criteria.",icon:"🔍",action:"Clear Filters"}
+            ].map(function(e,i){
+              return <div key={i} style={{padding:24,background:DS_COLORS.pageBg,borderRadius:10,border:"1px dashed "+DS_COLORS.border,textAlign:"center"}}>
+                <div style={{fontSize:28,opacity:0.3,marginBottom:8}}>{e.icon}</div>
+                <div style={{fontSize:13,fontWeight:600,color:DS_COLORS.text1,marginBottom:4,fontFamily:FT}}>{e.title}</div>
+                <div style={{fontSize:11,color:DS_COLORS.text3,lineHeight:1.5,marginBottom:e.action?12:0,fontFamily:FT}}>{e.desc}</div>
+                {e.action && <DSBtn outline sm>{e.action}</DSBtn>}
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderCompSkeleton(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Skeleton Loader</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Placeholder skeleton UI shown while data is loading. Mimics the layout of the content it replaces.</p>
+        <style>{
+          "@keyframes dsShimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}" +
+          ".ds-skel{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200px 100%;animation:dsShimmer 1.5s ease-in-out infinite}"
+        }</style>
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>KPI Skeleton</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:12,marginBottom:20}}>
+            {[0,1,2,3].map(function(i){
+              return <div key={i} style={{padding:"16px 20px",background:DS_COLORS.pageBg,borderRadius:10,border:"1px solid "+DS_COLORS.border}}>
+                <div className="ds-skel" style={{width:24,height:24,borderRadius:"50%",marginBottom:8}}/>
+                <div className="ds-skel" style={{width:40,height:28,borderRadius:4,marginBottom:6}}/>
+                <div className="ds-skel" style={{width:80,height:12,borderRadius:4}}/>
+              </div>;
+            })}
+          </div>
+          <div style={DSH}>Registration Card Skeleton</div>
+          <div style={{padding:20,background:DS_COLORS.pageBg,borderRadius:10,border:"1px solid "+DS_COLORS.border,marginBottom:20}}>
+            <div style={{display:"flex",gap:8,marginBottom:12}}>
+              <div className="ds-skel" style={{width:14,height:14,borderRadius:4}}/>
+              <div className="ds-skel" style={{width:200,height:16,borderRadius:4}}/>
+              <div className="ds-skel" style={{width:60,height:16,borderRadius:4}}/>
+            </div>
+            <div className="ds-skel" style={{width:160,height:12,borderRadius:4,marginBottom:16}}/>
+            <div className="ds-skel" style={{width:"100%",height:6,borderRadius:3,marginBottom:16}}/>
+            {[0,1,2,3].map(function(i){
+              return <div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                <div className="ds-skel" style={{width:10,height:10,borderRadius:"50%"}}/>
+                <div className="ds-skel" style={{width:120+i*20,height:12,borderRadius:4}}/>
+              </div>;
+            })}
+          </div>
+          <div style={DSH}>Activity Feed Skeleton</div>
+          {[0,1].map(function(i){
+            return <div key={i} style={{padding:"14px 16px",background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,borderLeft:"3px solid "+DS_COLORS.border,marginBottom:8}}>
+              <div style={{display:"flex",gap:8,marginBottom:8}}>
+                <div className="ds-skel" style={{width:12,height:12,borderRadius:4}}/>
+                <div className="ds-skel" style={{width:180,height:14,borderRadius:4}}/>
+                <div className="ds-skel" style={{width:60,height:14,borderRadius:4}}/>
+              </div>
+              <div className="ds-skel" style={{width:250,height:12,borderRadius:4,marginBottom:6}}/>
+              <div className="ds-skel" style={{width:160,height:20,borderRadius:6}}/>
+            </div>;
+          })}
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderMotion(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Motion & Animation</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Purposeful animation that guides attention and communicates state. Click "Play" to trigger each animation.</p>
+
+        <div style={DSH}>Entrance Animations</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:24}}>
+          {[
+            ["fu","Fade Up","translateY(12px) → 0, opacity 0 → 1","0.45s ease-out","Cards, KPIs, sections"],
+            ["fi","Fade In","opacity 0 → 1","0.3s ease-out","Detail panels, expanded content"],
+            ["fs","Fade Scale","scale(0.96) → 1, opacity 0 → 1","0.4s ease-out","Tab content transitions"]
+          ].map(function(a){
+            return <DSCard key={a[0]} style={{overflow:"hidden",marginBottom:0}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,fontFamily:FT}}>{a[1]}</div>
+                <DSBtn sm onClick={function(){dsToggle(a[0]);setTimeout(function(){dsToggle(a[0]);},700);}}>Play</DSBtn>
+              </div>
+              <div style={{height:48,display:"flex",alignItems:"center",justifyContent:"center",background:DS_COLORS.pageBg,borderRadius:6,marginBottom:8}}>
+                {dsPlays[a[0]] ? (
+                  <div className={a[0]} style={{padding:"8px 16px",background:DS_COLORS.roseBg,border:"1px solid "+DS_COLORS.roseBd,borderRadius:6,fontSize:11,color:DS_COLORS.rose,fontFamily:FT}}>Animated Element</div>
+                ) : (
+                  <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT}}>Click Play</div>
+                )}
+              </div>
+              <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,marginBottom:2}}>{a[3]}</div>
+              <div style={{fontSize:10,color:DS_COLORS.text2,fontFamily:FT}}>{a[4]}</div>
+            </DSCard>;
+          })}
+        </div>
+
+        <div style={DSH}>Continuous Animations</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24}}>
+          <DSCard style={{marginBottom:0}}>
+            <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,marginBottom:8,fontFamily:FT}}>Attention Glow (gl)</div>
+            <div style={{display:"flex",justifyContent:"center",marginBottom:8}}>
+              <div style={{padding:"8px 16px",background:DS_COLORS.amberBg,border:"1px solid "+DS_COLORS.amberBd,borderRadius:8,animation:"gl 2s ease-in-out infinite",fontSize:11,color:DS_COLORS.amber,fontWeight:500,fontFamily:FT}}>⚠ Action Required</div>
+            </div>
+            <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>2s ease-in-out infinite</div>
+            <div style={{fontSize:10,color:DS_COLORS.text2,fontFamily:FT,marginTop:2}}>Alert banner attention pulse</div>
+          </DSCard>
+          <DSCard style={{marginBottom:0}}>
+            <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,marginBottom:8,fontFamily:FT}}>Skeleton Shimmer</div>
+            <div style={{display:"flex",justifyContent:"center",marginBottom:8}}>
+              <div className="ds-skel" style={{width:120,height:24,borderRadius:6}}/>
+            </div>
+            <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>1.5s ease-in-out infinite</div>
+            <div style={{fontSize:10,color:DS_COLORS.text2,fontFamily:FT,marginTop:2}}>Loading placeholder shimmer</div>
+          </DSCard>
+        </div>
+
+        <div style={DSH}>Progress Bar Transition</div>
+        <DSCard style={{marginBottom:20}}>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:12,fontFamily:FT}}>Progress bars animate width changes with a smooth 0.6s ease transition. Click to simulate progress:</p>
+          <DSBtn sm onClick={function(){
+            setDsLoading(true);
+            setTimeout(function(){setDsLoading(false);},2000);
+          }} style={{marginBottom:12}}>Animate Progress</DSBtn>
+          <div style={{height:6,background:DS_COLORS.borderLight,borderRadius:3,overflow:"hidden"}}>
+            <div style={{width:dsLoading?"65%":"10%",height:"100%",background:DS_COLORS.teal,borderRadius:3,transition:"width 0.6s ease"}}/>
+          </div>
+        </DSCard>
+
+        <div style={DSH}>Hover Transitions</div>
+        <DSCard style={{marginBottom:20}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div>
+              <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,marginBottom:8,fontFamily:FT}}>Button Hover</div>
+              <p style={{fontSize:11,color:DS_COLORS.text2,marginBottom:10,fontFamily:FT}}>Buttons lift 1px and shift background on hover:</p>
+              <div style={{display:"flex",gap:6}}>
+                <DSBtn primary>Primary</DSBtn>
+                <DSBtn outline>Outline</DSBtn>
+              </div>
+              <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,marginTop:8}}>all 0.2s</div>
+            </div>
+            <div>
+              <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,marginBottom:8,fontFamily:FT}}>Filter Chip Hover</div>
+              <p style={{fontSize:11,color:DS_COLORS.text2,marginBottom:10,fontFamily:FT}}>Inactive chips show subtle background on hover:</p>
+              <div style={{display:"flex",gap:4}}>
+                <button style={{padding:"6px 14px",borderRadius:20,fontSize:12,fontWeight:500,fontFamily:DS_FONT,cursor:"pointer",border:"none",background:DS_COLORS.rose,color:"#fff"}}>⊞ All (9)</button>
+                <button style={{padding:"6px 14px",borderRadius:20,fontSize:12,fontWeight:500,fontFamily:DS_FONT,cursor:"pointer",border:"1px solid "+DS_COLORS.border,background:"transparent",color:DS_COLORS.text2}}>⊞ Payroll (3)</button>
+              </div>
+              <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN,marginTop:8}}>all 0.2s</div>
+            </div>
+          </div>
+        </DSCard>
+
+        <div style={DSH}>Staggered Entry</div>
+        <DSCard style={{marginBottom:0}}>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:12,fontFamily:FT}}>Activity feed items and registration cards use staggered animation delays for cascading entrance.</p>
+          <DSBtn sm onClick={function(){dsToggle("stagger");setTimeout(function(){dsToggle("stagger");},2500);}} style={{marginBottom:8}}>Play Staggered Entry</DSBtn>
+          {dsPlays.stagger && [0,1,2,3].map(function(i){
+            var items = ["Registration Processing Started","Additional Documentation Required","Registration Received","Registration Complete"];
+            var colors = [DS_COLORS.teal,DS_COLORS.amber,DS_COLORS.teal,DS_COLORS.green];
+            return <div key={i} className="fu" style={{display:"flex",gap:10,padding:"8px 12px",borderLeft:"3px solid "+colors[i],background:DS_COLORS.pageBg,borderRadius:6,marginBottom:6,animationDelay:i*0.1+"s"}}>
+              <span style={{fontSize:12,color:DS_COLORS.text1,fontFamily:FT}}>{items[i]}</span>
+            </div>;
+          })}
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderPatterns(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Layout Patterns</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The structural patterns that compose every screen in the Compliance Tracker.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Dashboard Anatomy</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>Every dashboard screen follows a consistent top-to-bottom structure:</p>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            {[
+              ["1. Top Navigation","'Compliance Tracker' brand + Dashboard / Activity tabs","Fixed, full-width"],
+              ["2. Page Header","Title ('Dashboard') + subtitle + alert banner","Below nav, full-width"],
+              ["3. Category Filters","Filter chips: All, Payroll, HR, Entity, Tax","Inline-flex, scrollable"],
+              ["4. KPI Row","4 metric tiles showing status counts","CSS Grid, 4 columns"],
+              ["5. Recent Activity","Activity feed with colored left-border events","Vertical stack, 10px gap"],
+              ["6. Status Tabs","New / In Progress / Action Required / Completed","Segmented control"],
+              ["7. Registration List","Registration cards with progress trackers","Vertical stack, 16px gap"],
+              ["8. Help Card","Contextual guidance + Contact Support button","Bottom of page"]
+            ].map(function(layer,i){
+              return <div key={i} style={{display:"grid",gridTemplateColumns:"180px 1fr 140px",gap:8,padding:"8px 12px",background:i%2===0?DS_COLORS.pageBg:"transparent",borderRadius:6,alignItems:"center"}}>
+                <span style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,fontFamily:FT}}>{layer[0]}</span>
+                <span style={{fontSize:11,color:DS_COLORS.text2,fontFamily:FT}}>{layer[1]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>{layer[2]}</span>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>App Shell Structure</div>
+          <div style={{fontFamily:MN,fontSize:10,color:DS_COLORS.text2,lineHeight:1.8,padding:16,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,whiteSpace:"pre"}}>{"┌──────────────────────────────────────────────────┐\n│  Top Bar (brand + Dashboard / Activity tabs) h:48 │\n├──────┬───────────────────────────────────────────┤\n│      │                                           │\n│ Side │         Main Content Area                  │\n│ Nav  │         (flex: 1)                          │\n│(48px)│         max-width: 900px                   │\n│      │         padding: 24px 32px                 │\n│      │                                           │\n│      │                                           │\n└──────┴───────────────────────────────────────────┘"}</div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Grid Patterns</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              ["KPI Row","grid-template-columns: repeat(4, 1fr), gap: 12px"],
+              ["Registration List","Vertical stack, gap: 16px, full-width cards"],
+              ["Activity Feed","Vertical stack, gap: 10px, left-bordered items"],
+              ["Filter Row","Inline-flex, gap: 8px, horizontal scrollable"]
+            ].map(function(g,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{g[0]}</div>
+                <div style={{fontSize:10,color:DS_COLORS.text2,fontFamily:MN}}>{g[1]}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderIcons(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Icons & Indicators</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Icon system used across the Compliance Tracker for navigation, status, and category identification.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Navigation Icons</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
+            {[
+              ["🏠","Home","Dashboard"],["⊞","Categories","Main nav"],["📍","Locations","State view"],["📅","Calendar","Deadlines"],
+              ["📁","Documents","File mgmt"],["⚙","Settings","Config"],["✉","Messages","Notifications"],["📊","Analytics","Reports"]
+            ].map(function(ic,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,textAlign:"center"}}>
+                <div style={{fontSize:20,marginBottom:4}}>{ic[0]}</div>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text1,fontFamily:FT}}>{ic[1]}</div>
+                <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT}}>{ic[2]}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Status Indicators</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:10}}>
+            {[
+              {label:"New",color:DS_COLORS.teal,icon:"📋"},
+              {label:"In Progress",color:DS_COLORS.teal,icon:"⏳"},
+              {label:"Action Required",color:DS_COLORS.amber,icon:"⚠"},
+              {label:"Blocked",color:DS_COLORS.red,icon:"🚫"},
+              {label:"Completed",color:DS_COLORS.green,icon:"✓"}
+            ].map(function(s){
+              return <div key={s.label} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,textAlign:"center"}}>
+                <div style={{width:24,height:24,borderRadius:"50%",background:s.color+"15",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 6px",fontSize:12}}>{s.icon}</div>
+                <div style={{fontSize:11,fontWeight:500,color:s.color,fontFamily:FT}}>{s.label}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Category Icons</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
+            {[
+              {label:"Payroll",icon:"⊞",desc:"Payroll registration filings"},
+              {label:"HR",icon:"👥",desc:"HR compliance filings"},
+              {label:"Entity",icon:"📁",desc:"Corporate entity setup"},
+              {label:"Tax",icon:"💰",desc:"Tax registration filings"}
+            ].map(function(c){
+              return <div key={c.label} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,textAlign:"center"}}>
+                <div style={{fontSize:20,marginBottom:4}}>{c.icon}</div>
+                <div style={{fontSize:12,fontWeight:600,color:DS_COLORS.text1,fontFamily:FT}}>{c.label}</div>
+                <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT,marginTop:2}}>{c.desc}</div>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderHierarchy(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Data Hierarchy</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The Compliance Tracker follows a four-level progressive disclosure pattern for data exploration.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Progressive Disclosure Flow</div>
+          <div style={{display:"flex",alignItems:"center",gap:0,marginBottom:16}}>
+            {[
+              {level:"L1",label:"KPI Summary",desc:"At-a-glance status counts",action:"Scan"},
+              {level:"L2",label:"Category Filter",desc:"Narrow by domain",action:"Filter"},
+              {level:"L3",label:"Registration List",desc:"Individual card details",action:"Explore"},
+              {level:"L4",label:"Registration Detail",desc:"Full progress + timeline",action:"Act"}
+            ].map(function(l,i){
+              return <div key={i} style={{flex:1,display:"flex",alignItems:"center"}}>
+                <div style={{textAlign:"center",flex:1}}>
+                  <div style={{padding:12,background:DS_COLORS.roseBg,borderRadius:8,border:"1px solid "+DS_COLORS.roseBd,borderTop:"2px solid "+DS_COLORS.rose,marginBottom:6}}>
+                    <div style={{fontSize:10,fontWeight:600,color:DS_COLORS.rose,fontFamily:FT,marginBottom:2}}>{l.level}</div>
+                    <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.text1,fontFamily:FT}}>{l.label}</div>
+                    <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT,marginTop:2}}>{l.desc}</div>
+                  </div>
+                  <div style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>({l.action})</div>
+                </div>
+                {i<3 && <div style={{fontSize:14,color:DS_COLORS.text3,padding:"0 4px"}}>→</div>}
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Information Hierarchy Principles</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              ["Start with counts","KPI tiles give a 2-second health scan before any scrolling."],
+              ["Filter before detail","Category chips let users narrow context before diving into individual registrations."],
+              ["Status drives navigation","Tab-based filtering by registration status (New, In Progress, etc.) is the primary drill-down pattern."],
+              ["Steps tell the story","The 4-step progress tracker inside each registration card makes the invisible process visible."]
+            ].map(function(p,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{p[0]}</div>
+                <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{p[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderFeedback(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Feedback & States</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>How the Compliance Tracker communicates status, progress, and outcomes to users.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Registration Status States</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+            {[
+              {status:"New",color:DS_COLORS.teal,desc:"Just created, not yet processing. Default entry state."},
+              {status:"In Progress",color:DS_COLORS.teal,desc:"Actively being processed. Progress bar shows advancement."},
+              {status:"Action Required",color:DS_COLORS.amber,desc:"User action needed. Alert banner animates with glow."},
+              {status:"Blocked",color:DS_COLORS.red,desc:"Stalled and requires intervention. Highest urgency."},
+              {status:"Completed",color:DS_COLORS.green,desc:"Successfully filed and confirmed. No further action."}
+            ].map(function(s,i){
+              return <div key={i} style={{padding:14,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border,borderLeft:"3px solid "+s.color}}>
+                <div style={{fontSize:12,fontWeight:600,color:s.color,marginBottom:4,fontFamily:FT}}>{s.status}</div>
+                <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{s.desc}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Loading States</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              ["Skeleton Loader","Rectangular shimmer bars mimicking content layout. Used for initial page load and data fetch."],
+              ["Progress Bar","Animated width transition (0.6s ease). Shows registration processing advancement."],
+              ["Button Loading","Text changes to loading state with disabled interaction. Used for form submissions."],
+              ["Activity Stagger","Sequential 100ms delay between feed items for guided reading order on load."]
+            ].map(function(l,i){
+              return <div key={i} style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.border}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.rose,marginBottom:4,fontFamily:FT}}>{l[0]}</div>
+                <p style={{fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,margin:0,fontFamily:FT}}>{l[1]}</p>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  function renderUsage(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Usage Rules</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Consolidated do's and don'ts for applying the design system consistently across the Compliance Tracker.</p>
+
+        {[
+          {cat:"Color",dos:["Use semantic colors consistently: Teal=New/In Progress, Amber=Action Required, Red=Blocked, Green=Completed","Use the background variant at 8% opacity for fills","Pair every color-coded element with a text label","Use left-border accent (3px) for activity feed status indication"],donts:["Use semantic foreground colors as background fills directly","Mix severity meanings (e.g., amber for success, teal for errors)","Use text3 for interactive or important text — it's too low contrast","Apply colored borders to cards without a semantic reason"]},
+          {cat:"Typography",dos:["Use Inter for all UI text — headings, labels, body, buttons","Use JetBrains Mono for dates, IDs, percentages, and numeric data","Use tabular-nums on all numeric displays for column alignment","Apply uppercase + letter-spacing on section headers"],donts:["Go below 10px font size for any text","Use font-weight 700 on body text — reserve bold for headings and KPI values","Mix fonts within a single label or value display","Use centered text in data-dense tables or registration lists"]},
+          {cat:"Components",dos:["Show 4 KPIs in the dashboard header row at all times","Include count in parentheses for status tabs and filter chips","Use the progress tracker for every registration card — never hide it","Place the Help card at the bottom of the dashboard"],donts:["Nest cards more than one level deep","Use badges for interactive elements — they're display-only","Skip the 4-step progress tracker on registration cards","Mix filter chips and status tabs in the same filter context"]},
+          {cat:"Motion",dos:["Use fu (fade-up) for cards and sections entering the viewport","Use gl (glow) only for the action-required alert banner","Keep transition durations between 0.15s and 0.6s","Use staggered delays (100ms) for activity feed items"],donts:["Apply continuous animations to more than 1-2 elements at once","Animate elements that are already visible — entrances only","Use animation delays longer than 0.5s for staggered lists","Add hover effects to non-interactive elements"]}
+        ].map(function(section){
+          return <DSCard key={section.cat} style={{marginBottom:16}}>
+            <div style={DSH}>{section.cat}</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.greenBd}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.green,marginBottom:6,fontFamily:FT}}>Do</div>
+                {section.dos.map(function(d,i){return <div key={i} style={{display:"flex",gap:6,padding:"3px 0",fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,fontFamily:FT}}><span style={{color:DS_COLORS.green,flexShrink:0}}>✓</span>{d}</div>;})}
+              </div>
+              <div style={{padding:12,background:DS_COLORS.pageBg,borderRadius:8,border:"1px solid "+DS_COLORS.redBd}}>
+                <div style={{fontSize:11,fontWeight:600,color:DS_COLORS.red,marginBottom:6,fontFamily:FT}}>Don't</div>
+                {section.donts.map(function(d,i){return <div key={i} style={{display:"flex",gap:6,padding:"3px 0",fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,fontFamily:FT}}><span style={{color:DS_COLORS.red,flexShrink:0}}>✗</span>{d}</div>;})}
+              </div>
+            </div>
+          </DSCard>;
+        })}
+      </div>
+    );
+  }
+
+  function renderAccessibility(){
+    return (
+      <div className="fu" style={{maxWidth:900}}>
+        <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Accessibility</h1>
+        <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>WCAG compliance and inclusive design patterns used across the Compliance Tracker.</p>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Color Contrast (WCAG 2.1)</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:14,fontFamily:FT}}>Contrast ratios measured against the card background (#FFFFFF).</p>
+          <div style={{display:"flex",flexDirection:"column",gap:4}}>
+            {[
+              ["#1E293B","Text Primary","text1","12.6:1","AAA"],
+              ["#64748B","Text Secondary","text2","4.7:1","AA"],
+              ["#1B2559","Navy","navy","11.8:1","AAA"],
+              ["#D4697A","Rose","rose","3.5:1","AA (large)"],
+              ["#0EA5E9","Teal","teal","3.1:1","AA (large)"],
+              ["#22C55E","Green","green","3.0:1","AA (large)"],
+              ["#EAB308","Amber","amber","2.8:1","Paired with text"],
+              ["#EF4444","Red","red","4.0:1","AA"]
+            ].map(function(c,i){
+              return <div key={i} style={{display:"grid",gridTemplateColumns:"24px 120px 60px 60px 100px",gap:8,padding:"6px 10px",background:i%2===0?DS_COLORS.pageBg:"transparent",borderRadius:4,alignItems:"center"}}>
+                <div style={{width:16,height:16,borderRadius:4,background:c[0]}}/>
+                <span style={{fontSize:11,color:DS_COLORS.text1,fontFamily:FT}}>{c[1]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>{c[2]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text1,fontFamily:MN,fontWeight:600}}>{c[3]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT}}>{c[4]}</span>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:20}}>
+          <div style={DSH}>Color-Not-Only Encoding</div>
+          <p style={{fontSize:12,color:DS_COLORS.text2,lineHeight:1.6,marginBottom:10,fontFamily:FT}}>Color is never the sole means of conveying information. Every color-coded element includes a text label and/or icon:</p>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            {[
+              "Status badges always contain text labels (New, In Progress, Action Required, Blocked, Completed)",
+              "Progress tracker steps include text labels alongside colored dots",
+              "Activity feed items pair colored left-border with event type text and icon",
+              "KPI tiles combine icon + numeric value + text label — color is reinforcement, not primary signal",
+              "Filter chips include category name and count — active state uses both color AND fill change"
+            ].map(function(r,i){
+              return <div key={i} style={{display:"flex",gap:6,fontSize:11,color:DS_COLORS.text2,lineHeight:1.5,fontFamily:FT}}>
+                <span style={{color:DS_COLORS.green,flexShrink:0}}>✓</span>{r}
+              </div>;
+            })}
+          </div>
+        </DSCard>
+
+        <DSCard style={{marginBottom:0}}>
+          <div style={DSH}>Interactive Target Sizing</div>
+          <div style={{display:"flex",flexDirection:"column",gap:4}}>
+            {[
+              ["Button (primary)","7px 16px","~34px","Primary actions"],
+              ["Button (sm)","5px 12px","~28px","Dense contexts"],
+              ["Filter Chip","6px 14px","~30px","Category selection"],
+              ["Status Tab","8px 16px","~34px","Status filtering"],
+              ["View Details link","N/A","~20px","Inline action"],
+              ["Nav Icon","32px × 32px","32px","Sidebar navigation"]
+            ].map(function(t,i){
+              return <div key={i} style={{display:"grid",gridTemplateColumns:"140px 80px 60px 1fr",gap:8,padding:"6px 10px",background:i%2===0?DS_COLORS.pageBg:"transparent",borderRadius:4,alignItems:"center"}}>
+                <span style={{fontSize:11,color:DS_COLORS.text1,fontFamily:FT}}>{t[0]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:MN}}>{t[1]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text1,fontFamily:MN}}>{t[2]}</span>
+                <span style={{fontSize:10,color:DS_COLORS.text3,fontFamily:FT}}>{t[3]}</span>
+              </div>;
+            })}
+          </div>
+        </DSCard>
+      </div>
+    );
+  }
+
+  // ─── Main Layout ───
+  return (
+    <div style={{marginTop:16}}>
+      <div style={{display:"flex",border:"1px solid "+DS_COLORS.border,borderRadius:12,overflow:"hidden",background:DS_COLORS.pageBg,minHeight:600}}>
+        {/* Sidebar */}
+        <div style={{width:210,background:DS_COLORS.cardBg,borderRight:"1px solid "+DS_COLORS.border,flexShrink:0,overflow:"auto",padding:"16px 0"}}>
+          <div style={{padding:"0 16px 14px",borderBottom:"1px solid "+DS_COLORS.border,marginBottom:8}}>
+            <div style={{display:"flex",alignItems:"center",gap:6}}>
+              <MoseyLogo size={16}/>
+              <span style={{fontSize:13,fontWeight:700,color:DS_COLORS.text1,fontFamily:FT}}>Design System</span>
+            </div>
+            <div style={{fontSize:10,color:DS_COLORS.text3,marginTop:2,fontFamily:FT}}>Compliance Tracker</div>
+          </div>
+          {DS_CATS.map(function(group){
+            return (
+              <div key={group.cat||"top"} style={{marginBottom:4}}>
+                {group.cat && (
+                  <div style={{fontSize:10,fontWeight:600,color:DS_COLORS.text3,textTransform:"uppercase",letterSpacing:"0.06em",padding:"8px 16px 4px",fontFamily:FT}}>{group.cat}</div>
+                )}
+                {group.items.map(function(item){
+                  var isA = dsSec===item.id;
+                  return (
+                    <div key={item.id} onClick={function(){setDsSec(item.id);}}
+                      onMouseEnter={function(){setDsHov(item.id);}}
+                      onMouseLeave={function(){setDsHov(null);}}
+                      style={{padding:group.cat?"5px 16px 5px 22px":"5px 16px",fontSize:11,fontWeight:isA?600:400,color:isA?C.ro:dsHov===item.id?DS_COLORS.text1:DS_COLORS.text2,background:isA?DS_COLORS.roseBg:dsHov===item.id?DS_COLORS.pageBg:"transparent",borderRight:isA?"2px solid "+C.ro:"2px solid transparent",cursor:"pointer",transition:"all 0.15s",fontFamily:FT}}>
+                      {item.la}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+        {/* Content */}
+        <div style={{flex:1,overflow:"auto",padding:"20px 28px 0",maxHeight:700}}>
+          {dsSec==="overview" && renderOverview()}
+          {dsSec==="principles" && renderPrinciples()}
+          {dsSec==="colors" && renderColors()}
+          {dsSec==="typography" && renderTypography()}
+          {dsSec==="spacing" && renderSpacing()}
+          {dsSec==="elevation" && renderElevation()}
+          {dsSec==="comp-badge" && renderCompBadge()}
+          {dsSec==="comp-button" && renderCompButton()}
+          {dsSec==="comp-kpi" && renderCompKPI()}
+          {dsSec==="comp-card" && renderCompCard()}
+          {dsSec==="comp-progress" && renderCompProgress()}
+          {dsSec==="comp-filter" && renderCompFilter()}
+          {dsSec==="comp-tabs" && renderCompTabs()}
+          {dsSec==="comp-activity" && renderCompActivity()}
+          {dsSec==="comp-alert" && renderCompAlert()}
+          {dsSec==="comp-nav" && renderCompNav()}
+          {dsSec==="comp-help" && renderCompHelp()}
+          {dsSec==="comp-empty" && renderCompEmpty()}
+          {dsSec==="comp-skeleton" && renderCompSkeleton()}
+          {dsSec==="motion" && renderMotion()}
+          {dsSec==="patterns" && renderPatterns()}
+          {dsSec==="icons" && renderIcons()}
+          {dsSec==="hierarchy" && renderHierarchy()}
+          {dsSec==="feedback" && renderFeedback()}
+          {dsSec==="usage" && renderUsage()}
+          {dsSec==="accessibility" && renderAccessibility()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ComplianceTrackerCaseStudy() {
   var _s1 = useState("Interface");
   var activeTab = _s1[0]; var setActiveTab = _s1[1];
@@ -138,7 +1770,7 @@ export default function ComplianceTrackerCaseStudy() {
     setExpandedSteps(function(prev) { var n = {}; for (var k in prev) n[k] = prev[k]; n[id] = !prev[id]; return n; });
   }
 
-  var TABS = ["Interface","Overview","Value of Design","Design Process","AI-Native","Tech Stack"];
+  var TABS = ["Interface","Overview","Value of Design","Design Process","AI-Native","Design System","Tech Stack"];
   var SUBTABS = ["20/60/20","Information Architecture","User Journeys","Steps"];
 
   function tabBtn(label, isActive, onClick, small) {
@@ -231,6 +1863,10 @@ export default function ComplianceTrackerCaseStudy() {
 
         {activeTab === "Tech Stack" && (
           <Card anim glass mb={20} style={{ marginTop: 24 }}><div style={SL}>Tech Stack</div><div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>{["Perplexity", "Claude Code", "Cursor", "Paper Design", "Figma", "Figma MCP", "Git", "Slack"].map(function(t) { return <span key={t} style={{ padding: "5px 11px", borderRadius: 6, background: "rgba(255,255,255,.55)", border: "1px solid " + C.s2, fontSize: 11, fontWeight: 500, color: C.t2 }}>{t}</span>; })}</div><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>{TECH_STACK.map(function(t) { return <div key={t.phase} style={{ padding: 12, background: "rgba(255,255,255,.5)", borderRadius: 8, border: "1px solid " + C.s2 }}><div style={{ fontSize: 12, fontWeight: 600, color: C.ro, marginBottom: 4 }}>{t.phase}</div><div style={{ fontSize: 11, fontWeight: 500, color: C.nv, marginBottom: 4, fontFamily: MN }}>{t.tools}</div><p style={{ fontSize: 11, color: C.t3, lineHeight: 1.5, margin: 0 }}>{t.desc}</p></div>; })}</div></Card>
+        )}
+
+        {activeTab === "Design System" && (
+          <DesignSystemPage />
         )}
 
         {/* ── Design Process sub-tabs ── */}
