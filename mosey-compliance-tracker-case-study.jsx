@@ -238,7 +238,7 @@ function DesignSystemPage() {
       {id:"usage",la:"Usage Rules",de:"Consolidated do's and don'ts for color, typography, components, motion, and layout across the Compliance Tracker.",cat:"Guidelines"}
     ];
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
           <MoseyLogo size={28}/>
           <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,fontFamily:FT}}>Compliance Tracker — Design System</h1>
@@ -302,7 +302,7 @@ function DesignSystemPage() {
 
   function renderPrinciples(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Design Principles</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The foundational principles guiding every design decision in the Compliance Tracker interface.</p>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24}}>
@@ -340,7 +340,7 @@ function DesignSystemPage() {
 
   function renderColors(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Color Palette</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Hover over any swatch to reveal its hex value. Colors are organized by function.</p>
 
@@ -416,7 +416,7 @@ function DesignSystemPage() {
 
   function renderTypography(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Typography</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The Compliance Tracker uses Inter as its primary typeface — clean, legible at dashboard densities, with strong tabular numeral support.</p>
 
@@ -495,7 +495,7 @@ function DesignSystemPage() {
 
   function renderSpacing(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Spacing Scale</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Based on a 4px base unit. Spacing is consistent across gap, padding, and margin.</p>
 
@@ -556,7 +556,7 @@ function DesignSystemPage() {
 
   function renderElevation(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Elevation & Shadows</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The Compliance Tracker uses subtle shadows and border accents to communicate depth and status.</p>
 
@@ -611,7 +611,7 @@ function DesignSystemPage() {
 
   function renderCompBadge(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Status Badge</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Status indicators with semantic color mapping used across registration cards, activity feed, and dashboard.</p>
         <DSCard style={{marginBottom:20}}>
@@ -656,7 +656,7 @@ function DesignSystemPage() {
 
   function renderCompButton(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Button</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Primary and outline buttons. Hover over each to see interactive states.</p>
         <DSCard style={{marginBottom:20}}>
@@ -708,7 +708,7 @@ function DesignSystemPage() {
 
   function renderCompKPI(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>KPI Tile</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>At-a-glance metric cards for the dashboard header. Each tile shows a count with a status icon and label.</p>
         <DSCard style={{marginBottom:20}}>
@@ -749,7 +749,7 @@ function DesignSystemPage() {
 
   function renderCompCard(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Registration Card</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>The primary container for displaying individual registration status with progress tracker.</p>
         <DSCard style={{marginBottom:20}}>
@@ -825,7 +825,7 @@ function DesignSystemPage() {
 
   function renderCompProgress(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Progress Tracker</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Step-by-step progress visualization for registration lifecycle. The core UX pattern inspired by the Domino's Pizza Tracker.</p>
         <DSCard style={{marginBottom:20}}>
@@ -893,7 +893,7 @@ function DesignSystemPage() {
 
   function renderCompFilter(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Filter Chip</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Category filter pills for narrowing the dashboard view. Click to interact.</p>
         <DSCard style={{marginBottom:20}}>
@@ -944,7 +944,7 @@ function DesignSystemPage() {
 
   function renderCompTabs(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Status Tabs</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Segmented control for filtering registrations by status. The active tab shows a filled background. Click to switch.</p>
         <DSCard style={{marginBottom:20}}>
@@ -986,7 +986,7 @@ function DesignSystemPage() {
 
   function renderCompActivity(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Activity Feed Item</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Timeline-style event cards showing registration status changes with colored left borders.</p>
         <DSCard style={{marginBottom:20}}>
@@ -1057,7 +1057,7 @@ function DesignSystemPage() {
 
   function renderCompAlert(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Alert Banner</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Top-of-dashboard notification banner for urgent compliance status. Uses animated glow for attention.</p>
         <DSCard style={{marginBottom:20}}>
@@ -1091,7 +1091,7 @@ function DesignSystemPage() {
 
   function renderCompNav(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Navigation Sidebar</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Left-side icon navigation with collapsible sidebar. Icons use semantic colors for active/inactive states.</p>
         <DSCard style={{marginBottom:20}}>
@@ -1141,7 +1141,7 @@ function DesignSystemPage() {
 
   function renderCompHelp(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Help Card</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Contextual help section at the bottom of the dashboard. Provides guidance without requiring users to leave the page.</p>
         <DSCard style={{marginBottom:20}}>
@@ -1169,7 +1169,7 @@ function DesignSystemPage() {
 
   function renderCompEmpty(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Empty State</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Placeholder shown when a section has no data. Provides context and suggests next actions.</p>
         <DSCard style={{marginBottom:20}}>
@@ -1196,7 +1196,7 @@ function DesignSystemPage() {
 
   function renderCompSkeleton(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Skeleton Loader</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:16,fontFamily:FT,lineHeight:1.6}}>Placeholder skeleton UI shown while data is loading. Mimics the layout of the content it replaces.</p>
         <style>{
@@ -1249,7 +1249,7 @@ function DesignSystemPage() {
 
   function renderMotion(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Motion & Animation</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Purposeful animation that guides attention and communicates state. Click "Play" to trigger each animation.</p>
 
@@ -1352,7 +1352,7 @@ function DesignSystemPage() {
 
   function renderPatterns(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Layout Patterns</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The structural patterns that compose every screen in the Compliance Tracker.</p>
 
@@ -1406,7 +1406,7 @@ function DesignSystemPage() {
 
   function renderIcons(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Icons & Indicators</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Icon system used across the Compliance Tracker for navigation, status, and category identification.</p>
 
@@ -1467,7 +1467,7 @@ function DesignSystemPage() {
 
   function renderHierarchy(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Data Hierarchy</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>The Compliance Tracker follows a four-level progressive disclosure pattern for data exploration.</p>
 
@@ -1517,7 +1517,7 @@ function DesignSystemPage() {
 
   function renderFeedback(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Feedback & States</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>How the Compliance Tracker communicates status, progress, and outcomes to users.</p>
 
@@ -1561,7 +1561,7 @@ function DesignSystemPage() {
 
   function renderUsage(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Usage Rules</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>Consolidated do's and don'ts for applying the design system consistently across the Compliance Tracker.</p>
 
@@ -1591,7 +1591,7 @@ function DesignSystemPage() {
 
   function renderAccessibility(){
     return (
-      <div className="fu" style={{maxWidth:900}}>
+      <div className="fu" style={{maxWidth:"none"}}>
         <h1 style={{fontSize:20,fontWeight:700,color:DS_COLORS.text1,marginBottom:6,fontFamily:FT}}>Accessibility</h1>
         <p style={{fontSize:12,color:DS_COLORS.text2,marginBottom:24,fontFamily:FT,lineHeight:1.6}}>WCAG compliance and inclusive design patterns used across the Compliance Tracker.</p>
 
@@ -1789,7 +1789,7 @@ export default function ComplianceTrackerCaseStudy() {
 
       <a href="https://designsbytulcy.weebly.com/compliance-tracker.html" style={{ position: "fixed", top: 20, left: 20, zIndex: 100, display: "flex", alignItems: "center", gap: 5, padding: "7px 14px", borderRadius: 20, background: "rgba(255,255,255,.85)", backdropFilter: "blur(12px)", border: "1px solid " + C.bd, color: C.t1, fontSize: 12, fontWeight: 600, fontFamily: FT, textDecoration: "none", boxShadow: "0 2px 8px rgba(45,31,26,.08)", transition: "all .2s" }}><span style={{ fontSize: 14, lineHeight: 1 }}>←</span> Back</a>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 48px 60px", fontFamily: FT }}>
+      <div style={{ maxWidth: activeTab === "Design System" ? 1200 : 900, margin: "0 auto", padding: "28px 48px 60px", fontFamily: FT, transition: "max-width .3s ease" }}>
 
         <div className="fu" style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 28 }}>
           {[["Portfolio", "https://designsbytulcy.weebly.com"], ["Resume", "https://drive.google.com/file/d/1dvnaJaTdTq2Esx_BNRYnpLAZjJgwRk79/view?usp=sharing"], ["LinkedIn", "https://www.linkedin.com/in/tulcypatel"]].map(function(l) { return <a key={l[0]} href={l[1]} target="_blank" rel="noopener noreferrer" style={{ padding: "5px 14px", borderRadius: 6, background: C.ro, color: "#fff", fontSize: 11, fontWeight: 600, textDecoration: "none", fontFamily: FT }}>{l[0]}</a>; })}
