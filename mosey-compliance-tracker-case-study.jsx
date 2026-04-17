@@ -1665,7 +1665,7 @@ function DesignSystemPage() {
   // ─── Main Layout ───
   return (
     <div style={{marginTop:16}}>
-      <div style={{display:"flex",border:"1px solid "+DS_COLORS.border,borderRadius:12,overflow:"hidden",background:DS_COLORS.pageBg,minHeight:600}}>
+      <div style={{display:"flex",border:"1px solid "+DS_COLORS.border,borderRadius:12,overflow:"hidden",background:DS_COLORS.pageBg,height:700}}>
         {/* Sidebar */}
         <div style={{width:210,background:DS_COLORS.cardBg,borderRight:"1px solid "+DS_COLORS.border,flexShrink:0,overflow:"auto",padding:"16px 0"}}>
           <div style={{padding:"0 16px 14px",borderBottom:"1px solid "+DS_COLORS.border,marginBottom:8}}>
@@ -1697,7 +1697,7 @@ function DesignSystemPage() {
           })}
         </div>
         {/* Content */}
-        <div style={{flex:1,overflow:"auto",padding:"20px 28px 0",maxHeight:700}}>
+        <div style={{flex:1,overflow:"auto",padding:"20px 28px 0"}}>
           {dsSec==="overview" && renderOverview()}
           {dsSec==="principles" && renderPrinciples()}
           {dsSec==="colors" && renderColors()}
